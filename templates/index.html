@@ -12,8 +12,13 @@
             <p></strong>.</p>
 			</div>
 		<script>
-	var data = '{{ data }}';
-	var videos = data.replace("&#39;", '"');
+
+
+
+	
+	var videos = {{ data | safe}} ;
+
+
 	console.log(videos);
     var columns = [
     { head: 'Video Title', cl: 'title', html: ƒ('Title') },
@@ -99,7 +104,8 @@
 				.attr("transform","translate(0, 500)")
 				.call(axis)
 		console.log(d3);
+
 		</script>
-	
+		
 
 {% endblock %}

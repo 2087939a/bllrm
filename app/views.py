@@ -44,9 +44,6 @@ def search_by_keyword():
 
 videos = search_by_keyword()
 
-print videos
-
-print " -------------------------- "
 
 def search_video_stats(v):
 
@@ -73,10 +70,6 @@ id="vy-k0FopsmY",
 fields = "items(statistics(viewCount), snippet(title,publishedAt), id)"
 ).execute()
 
-print search_response.get("items" , [])[0]["id"]
-
-print search_response.get("items" , [])
-
 # https://developers.google.com/apis-explorer/#p/youtube/v3/youtube.videos.list?
 # part=statistics%252C+snippet&
 # id=vy-k0FopsmY&
@@ -92,13 +85,18 @@ def index(request):
     with open('videos.csv') as csvfile:
         reader = csv.DictReader(csvfile)
         csvlist = list()
+        i = -1
         for row in reader:
+            if i > 0:
+                break    
             csvlist.append({'Title' : row['Title'], 
                         'videoID' : row['videoID'],
                         'Artist' : row['Artist'],
                         'viewCount' : row['viewCount'],
                         'Location' : row['Location'],
                         'Date' : row['Date']})
+            
+
     #print csvlist
     # Return a rendered response to send to the client.
     # We make use of the shortcut function to make our lives easier.
