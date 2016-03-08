@@ -9,7 +9,7 @@ import os
 import urllib
 from keys import YOUTUBE_API_KEY, BOILER_ROOM_CHANNELID
 
-
+import csv
 
 # Set API_KEY to the "API key" value from the "Access" tab of the
 # Google APIs Console http://code.google.com/apis/console#access
@@ -87,13 +87,24 @@ def index(request):
 
     # Construct a dictionary to pass to the template engine as its context.
     # Note the key boldmessage is the same as {{ boldmessage }} in the template!
-    context_dict = {'boldmessage': "I am bold font from the context"}
+    
 
+    with open('videos.csv') as csvfile:
+        reader = csv.DictReader(csvfile)
+        csvlist = list()
+        for row in reader:
+            csvlist.append({'Title' : row['Title'], 
+                        'videoID' : row['videoID'],
+                        'Artist' : row['Artist'],
+                        'viewCount' : row['viewCount'],
+                        'Location' : row['Location'],
+                        'Date' : row['Date']})
+    #print csvlist
     # Return a rendered response to send to the client.
     # We make use of the shortcut function to make our lives easier.
     # Note that the first parameter is the template we wish to use.
-
-    return render(request, 'index.html')
+    context_dict = {'data' : csvlist}
+    return render(request, 'index.html', context_dict)
 
 	
 	

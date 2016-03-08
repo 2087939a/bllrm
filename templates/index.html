@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load staticfiles %}
 
 
 {% block title %}Index{% endblock %}
@@ -12,6 +12,57 @@
             <p></strong>.</p>
 			</div>
 		<script>
+	var data = '{{ data }}';
+	var videos = data.replace("&#39;", '"');
+	console.log(videos);
+    var columns = [
+    { head: 'Video Title', cl: 'title', html: ƒ('Title') },
+    { head: 'Date', cl: 'center', html: ƒ('Date') },
+    { head: 'Artist', cl: 'center', html: ƒ('Artist') },
+    { head: 'Location', cl: 'num', html: ƒ('Location') },
+    { head: 'View Count', cl: 'num', html: ƒ('viewCount') }
+];
+		 // create table
+    var table = d3.select('#main')
+        .append('table');
+
+    // create table header
+    table.append('thead').append('tr')
+        .selectAll('th')
+        .data(columns).enter()
+        .append('th')
+        .attr('class', ƒ('cl'))
+        .text(ƒ('head'));
+
+    // create table body
+    table.append('tbody')
+        .selectAll('tr')
+        .data(videos).enter()
+        .append('tr')
+        .selectAll('td')
+        .data(function(row, i) {
+            return columns.map(function(c) {
+                // compute cell values for this specific row
+                var cell = {};
+                d3.keys(c).forEach(function(k) {
+                    cell[k] = typeof c[k] == 'function' ? c[k](row,i) : c[k];
+                });
+                return cell;
+            });
+        }).enter()
+        .append('td')
+        .html(ƒ('html'))
+        .attr('class', ƒ('cl'));
+
+    function length() {
+        var fmt = d3.format('02d');
+        return function(l) { return Math.floor(l / 60) + ':' + fmt(l % 60) + ''; };
+    }
+		
+		
+		
+		
+		
 		var dataArray = [20,40,50, 60, 5];
 		var width = 800;
 		var height = 600;
