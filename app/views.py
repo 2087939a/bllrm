@@ -9,6 +9,10 @@ import os
 import urllib
 from keys import YOUTUBE_API_KEY, BOILER_ROOM_CHANNELID
 
+
+
+
+import pandas as pd
 import csv
 
 # Set API_KEY to the "API key" value from the "Access" tab of the
@@ -82,22 +86,22 @@ def index(request):
     # Note the key boldmessage is the same as {{ boldmessage }} in the template!
     
 
-    with open('videos.csv') as csvfile:
+    with open('videos_sorted.csv') as csvfile:
         reader = csv.DictReader(csvfile)
         csvlist = list()
-        i = -1
+        i = 0
         for row in reader:
-            if i > 0:
-                break    
-            csvlist.append({'Title' : row['Title'], 
-                        'videoID' : row['videoID'],
-                        'Artist' : row['Artist'],
-                        'viewCount' : row['viewCount'],
+            #if i > 100:
+            #    break    
+            csvlist.append({'Artist' : row['Artist'],
                         'Location' : row['Location'],
+                        'viewCount' : row['viewCount'],
+                        'Title' : row['Title'], 
+                        'videoID' : row['videoID'],
                         'Date' : row['Date']})
-            
+            i+=1
 
-    #print csvlist
+
     # Return a rendered response to send to the client.
     # We make use of the shortcut function to make our lives easier.
     # Note that the first parameter is the template we wish to use.

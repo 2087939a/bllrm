@@ -13,7 +13,7 @@ import gdata.youtube
 import gdata.youtube.service
 #use google api v3
 
-
+import pandas as pd
 import csv
 
 from apiclient.discovery import build
@@ -67,7 +67,7 @@ def formatTitle(title):
 		artist.append(word)
 		i += 1
 		
-	otherstop = ['dj','at', 'the', '&', '-', '/', 'of', 'house', 'in', 'stereo']
+	otherstop = ['dj','at', 'the', '&', '-', '/', 'of', 'house', 'in', 'stereo', 'groove', 'magazine', 'innervisions', '2012']
 	stopwords = stopwords+otherstop
 	location = [w for w in locationList if w.lower() not in stopwords]
 	format = []
@@ -134,23 +134,22 @@ def createcsvfile(videoList):
             
             
             writer.writerow({'videoID': vid, 
-			                 'Artist' : artist,
-							 'Location' : location,
+                             'Artist' : artist,
+                             'Location' : location,
                              'Date': dateOfVid,
                              'Title' : titleOfVid,
                              'viewCount' : d[vid]['statistics']['viewCount'],
-							
-                            })
+                             })
 
 
 
-
-
-	
 
 def populate():
     createcsvfile(videos)
-	
+    df = pd.read_csv('videos.csv')
+    df = df.sort_values('viewCount', ascending = False)
+    df.to_csv('videos_sorted.csv', index=False)
+
 # https://developers.google.com/apis-explorer/#p/youtube/v3/youtube.videos.list?
 # part=statistics%252C+snippet&
 # id=vy-k0FopsmY&
@@ -173,3 +172,4 @@ def add_video(name, url, videoid):
 if __name__ == '__main__':
     print "Starting population script..."
     populate()
+    print "Done"

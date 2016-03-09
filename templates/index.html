@@ -16,16 +16,17 @@
 
 
 	
-	var videos = {{ data | safe}} ;
+	var videos = {{ data | safe }} ;
 
 
 	console.log(videos);
     var columns = [
-    { head: 'Video Title', cl: 'title', html: ƒ('Title') },
-    { head: 'Date', cl: 'center', html: ƒ('Date') },
     { head: 'Artist', cl: 'center', html: ƒ('Artist') },
-    { head: 'Location', cl: 'num', html: ƒ('Location') },
-    { head: 'View Count', cl: 'num', html: ƒ('viewCount') }
+    { head: 'Location', cl: 'center', html: ƒ('Location') },
+    { head: 'View Count', cl: 'num', html: ƒ('viewCount') },
+	{ head: 'Video Title', cl: 'title', html: ƒ('Title') },
+	{ head: 'Date', cl: 'center', html: ƒ('Date') }
+    
 ];
 		 // create table
     var table = d3.select('#main')
