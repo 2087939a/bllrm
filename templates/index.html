@@ -13,17 +13,15 @@
 			</div>
 		<script>
 
-
-
-	
 	var videos = {{ data | safe }} ;
 
 
 	console.log(videos);
     var columns = [
+    
     { head: 'Artist', cl: 'center', html: ƒ('Artist') },
     { head: 'Location', cl: 'center', html: ƒ('Location') },
-    { head: 'View Count', cl: 'num', html: ƒ('viewCount') },
+    { head: 'no Views', cl: 'num', html: ƒ('viewCount') },
 	{ head: 'Video Title', cl: 'title', html: ƒ('Title') },
 	{ head: 'Date', cl: 'center', html: ƒ('Date') }
     
@@ -38,6 +36,8 @@
         .data(columns).enter()
         .append('th')
         .attr('class', ƒ('cl'))
+	.style("border", "3px black solid")
+	.style("padding", "15px")
         .text(ƒ('head'));
 
     // create table body
@@ -45,18 +45,25 @@
         .selectAll('tr')
         .data(videos).enter()
         .append('tr')
+ 	.on("mouseover", function(){d3.select(this).style("background-color", "grey").style("color","white")}) 
+    	.on("mouseout", function(){d3.select(this).style("background-color", "white").style("color", "black")}) 
         .selectAll('td')
+
         .data(function(row, i) {
             return columns.map(function(c) {
                 // compute cell values for this specific row
                 var cell = {};
                 d3.keys(c).forEach(function(k) {
                     cell[k] = typeof c[k] == 'function' ? c[k](row,i) : c[k];
+		    
                 });
                 return cell;
             });
         }).enter()
         .append('td')
+	
+	.style("border", "3px black solid")
+	.style("padding", "15px")
         .html(ƒ('html'))
         .attr('class', ƒ('cl'));
 
