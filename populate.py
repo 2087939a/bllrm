@@ -52,7 +52,7 @@ def formatTitle(title):
 				"ballantine's", 'by', 'in', '75', '55', '45' , '30', 'stay', 'true',
 				'70', 'take-over','ray-ban', '80', 'IR', 'studios', '105', 'series',
 				'broadcasts', '009', 'hip-hop', 'bridgesformusic.org', '40', '65', 'opening', 
-				'concert', 'vans', '5th', 'birthday', 'daytime']
+				'concert', 'vans', '5th', 'birthday', 'daytime', '@']
 	titleList = title.split()
 	locationList = []
 	artist = []
@@ -114,11 +114,15 @@ def get_stats(videoId):
 	
     return search_response.get("items" , [])[0]
 
+	
+	
+beats = 'Beats Unraveled'
+lose= 'Help Me Lose My Mind'
 def createcsvfile(videoList):
     csvfile = open('videos.csv', 'wb')
     fieldnames = ['videoID', 'Artist','Location','Date', 'Title', 'viewCount', ]
 
-    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=';')
     writer.writeheader()
     with open('videos.csv', 'wb') as csvfile:
         d = parse_videos(videoList)
@@ -127,12 +131,17 @@ def createcsvfile(videoList):
             dateOfVid = dateOfVid.split('T')[0]
             dateOfVid = datetime.datetime.strptime(dateOfVid,'%Y-%m-%d').date()
             titleOfVid = d[vid]['snippet']['title'].encode('utf-8').strip()
+            if beats in titleOfVid:
+                continue
+            if lose in titleOfVid:
+			    continue
             format = formatTitle(titleOfVid)
             location = format[1]
-
+            if location == '':
+                location = 'undefined'
             artist = format[0]
-            
-            
+            if artist == '':
+                artist = 'undefined'
             writer.writerow({'videoID': vid, 
                              'Artist' : artist,
                              'Location' : location,
@@ -146,9 +155,7 @@ def createcsvfile(videoList):
 
 def populate():
     createcsvfile(videos)
-    df = pd.read_csv('videos.csv')
-    df = df.sort_values('viewCount', ascending = False)
-    df.to_csv('videos_sorted.csv', index=False)
+
 
 # https://developers.google.com/apis-explorer/#p/youtube/v3/youtube.videos.list?
 # part=statistics%252C+snippet&
