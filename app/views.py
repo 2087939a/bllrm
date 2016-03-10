@@ -101,11 +101,16 @@ def index(request):
                         'Date' : row['Date']})
             i+=1
 
+    with open('links.txt', 'r') as links:
+        l = json.load(links)
+    linkslist = list()
+    for ele in l:
+        linkslist.append(ele)
 
     # Return a rendered response to send to the client.
     # We make use of the shortcut function to make our lives easier.
     # Note that the first parameter is the template we wish to use.
-    context_dict = {'data' : csvlist}
+    context_dict = {'data' : csvlist, 'links' : linkslist}
     return render(request, 'index.html', context_dict)
 
 	
