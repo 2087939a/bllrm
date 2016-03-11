@@ -43,16 +43,16 @@ developerKey=API_KEY
 
 
 
-
 def formatTitle(title):
 	stopwords = ['boiler', 'room', 'set', 'mix', 'takeovers', 'villa', 
-				'takeover', 'young', 'turks', 'min', '90', '3.5', 
-				'60', '35', '100', 'hour', 'red', 'bull', 
-				'music' ,'academy' ,'rbma', 'x', 'minute', 'live', 'show', '50', 
-				"ballantine's", 'by', 'in', '75', '55', '45' , '30', 'stay', 'true',
-				'70', 'take-over','ray-ban', '80', 'IR', 'studios', '105', 'series',
-				'broadcasts', '009', 'hip-hop', 'bridgesformusic.org', '40', '65', 'opening', 
-				'concert', 'vans', '5th', 'birthday', 'daytime', '@']
+                'takeover', 'young', 'turks', 'min', '90', '3.5', 
+                '60', '35', '100', 'hour', 'red', 'bull', 
+                'music' ,'academy' ,'rbma', 'x', 'minute', 'live', 'show', '50', 
+                "ballantine's", 'by', 'in', '75', '55', '45' , '30', 'stay', 'true',
+                '70', 'take-over','ray-ban', '80', 'IR', 'studios', '105', 'series',
+                'broadcasts', '009', 'hip-hop', 'bridgesformusic.org', '40', '65', 'opening', 
+                'concert', 'vans', '5th', 'birthday', 'daytime', '@', 'festival', 'weather',
+                '#wdnd', 'hotel', 'times', 'w', 'alexandra', 'palace', 'manchester']
 	titleList = title.split()
 	locationList = []
 	artist = []
@@ -67,7 +67,8 @@ def formatTitle(title):
 		artist.append(word)
 		i += 1
 		
-	otherstop = ['dj','at', 'the', '&', '-', '/', 'of', 'house', 'in', 'stereo', 'groove', 'magazine', 'innervisions', '2012']
+	otherstop = ['dj','at', 'the', '&', '-', '/', 'of', 'house', 'in', 'stereo', 'groove', 'magazine', 
+                 'innervisions', '2012', 'square', '-', 'ir', 'clown', 'sunset']
 	stopwords = stopwords+otherstop
 	location = [w for w in locationList if w.lower() not in stopwords]
 	format = []
@@ -115,7 +116,7 @@ def get_stats(videoId):
     return search_response.get("items" , [])[0]
 
 	
-	
+staytruetrailer = '[Trailer]'
 beats = 'Beats Unraveled'
 lose= 'Help Me Lose My Mind'
 def createcsvfile(videoList):
@@ -133,13 +134,24 @@ def createcsvfile(videoList):
             titleOfVid = d[vid]['snippet']['title'].encode('utf-8').strip()
             if beats in titleOfVid:
                 continue
-            if lose in titleOfVid:
+            elif lose in titleOfVid:
+                continue
+            elif staytruetrailer in titleOfVid:
                 continue
             format = formatTitle(titleOfVid)
             location = format[1]
             if location == '':
                 location = 'undefined'
+            elif 'ADE' in location:
+                location = 'Amsterdam'
+            elif 'Mexico Tulum' == location:
+                location = 'Tulum'
+            elif 'MELT' in location:
+                location = 'MELT!'
             artist = format[0]
+            if 'Brazil' in location:
+                artist = 'DJ Marky'
+                location = 'Brazil'
             if artist == '':
                 artist = 'undefined'
             writer.writerow({'videoID': vid, 

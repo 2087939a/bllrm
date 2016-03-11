@@ -31,49 +31,6 @@ developerKey=API_KEY
 )
 
 
-def search_by_keyword():
-
-    search_response = youtube.search().list(
-    part="snippet",
-    channelId = BOILER_ROOM_CHANNELID,
-    order = "viewCount",
-    maxResults=11
-    ).execute()
-    videos = []
-    for search_result in search_response.get("items", []):
-        if search_result["id"]["kind"] == "youtube#video":
-            videos.append("%s" % search_result["id"]["videoId"])
-    
-    return videos
-
-videos = search_by_keyword()
-
-
-def search_video_stats(v):
-
-    search_response = youtube.search().list(
-    part="statistics, snippet",
-    videoId = v,
-    
-    
-    ).execute()
-    return search_response.get("items", [])
-
-def parse_videos(videos):
-    vs = []
-    for vid in videos:
-        list.append(search_video_stats(vid))
-    return list
-	# Create your views here.
-
-
-# parse_videos(videos)
-search_response = youtube.videos().list(
-part="statistics,snippet",
-id="vy-k0FopsmY",
-fields = "items(statistics(viewCount), snippet(title,publishedAt), id)"
-).execute()
-
 # https://developers.google.com/apis-explorer/#p/youtube/v3/youtube.videos.list?
 # part=statistics%252C+snippet&
 # id=vy-k0FopsmY&

@@ -42,9 +42,9 @@ for row in videos:
 	sourceArtistId = 0
 	targetLocId = 0
 	for node in nodes:
-		if artist==node['name']:
+		if artist==node['name'].encode('utf-8'):
 			sourceArtistId = node['id']
-		elif location==node['name']:
+		elif location==node['name'].encode('utf-8'):
 			targetLocId = node['id']
 	names.append([artist,location])
 	links.append({'source':sourceArtistId,'target':targetLocId})
