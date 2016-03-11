@@ -10,7 +10,7 @@ import urllib
 from keys import YOUTUBE_API_KEY, BOILER_ROOM_CHANNELID
 
 
-
+import json
 
 import pandas as pd
 import csv
@@ -87,7 +87,7 @@ def index(request):
     
 
     with open('videos_sorted.csv') as csvfile:
-        reader = csv.DictReader(csvfile)
+        reader = csv.DictReader(csvfile, delimiter =';')
         csvlist = list()
         i = 0
         for row in reader:
@@ -102,15 +102,20 @@ def index(request):
             i+=1
 
     with open('links.txt', 'r') as links:
-        l = json.load(links)
-    linkslist = list()
-    for ele in l:
-        linkslist.append(ele)
+        l = json.dumps(json.load(links))
+    linkslist = l
+		
+    with open('ids.txt', 'r') as ids:
+        input_file = json.dumps(json.load(ids))
+    nodeslist = input_file
+	#print linkslist
 
     # Return a rendered response to send to the client.
     # We make use of the shortcut function to make our lives easier.
     # Note that the first parameter is the template we wish to use.
-    context_dict = {'data' : csvlist, 'links' : linkslist}
+    context_dict = {'data' : csvlist, 
+					'linkslist' : linkslist, 
+					'nodeslist' : nodeslist}
     return render(request, 'index.html', context_dict)
 
 	
