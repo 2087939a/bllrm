@@ -52,7 +52,8 @@ def formatTitle(title):
                 '70', 'take-over','ray-ban', '80', 'IR', 'studios', '105', 'series',
                 'broadcasts', '009', 'hip-hop', 'bridgesformusic.org', '40', '65', 'opening', 
                 'concert', 'vans', '5th', 'birthday', 'daytime', '@', 'festival', 'weather',
-                '#wdnd', 'hotel', 'times', 'w', 'alexandra', 'palace', 'manchester']
+                '#wdnd', 'hotel', 'times', 'w', 'alexandra', 'palace', 'manchester','breakfast',
+                'with', 'ringgo:']
 	titleList = title.split()
 	locationList = []
 	artist = []
@@ -68,7 +69,7 @@ def formatTitle(title):
 		i += 1
 		
 	otherstop = ['dj','at', 'the', '&', '-', '/', 'of', 'house', 'in', 'stereo', 'groove', 'magazine', 
-                 'innervisions', '2012', 'square', '-', 'ir', 'clown', 'sunset']
+                 'innervisions', '2012', 'square', 'ir', 'clown', 'sunset', 'mndsgn', 'knxwledge']
 	stopwords = stopwords+otherstop
 	location = [w for w in locationList if w.lower() not in stopwords]
 	format = []
@@ -115,7 +116,37 @@ def get_stats(videoId):
 	
     return search_response.get("items" , [])[0]
 
+
 	
+def replaceInconsistencies(f):
+    artist = f[0]
+    location = f[1]
+    if location == '':
+        location = 'undefined'
+    elif 'ADE' in location:
+        location = 'Amsterdam'
+    elif 'Mexico Tulum' == location:
+        location = 'Tulum'
+    elif 'MELT' in location:
+        location = 'MELT!'
+    elif location == 'RoomIbiza':
+        location = 'Ibiza'
+    if 'Brazil' in location:
+        artist = 'DJ Marky'
+        location = 'Brazil'
+    if artist == '':
+        artist = 'undefined'
+    elif 'LOUISAH' in artist:
+        artist = 'LOUISAHHH!!!'
+    if 'Gui' in artist:
+        artist = 'Gui Boratto'
+    if 'Boys' in artist:
+        artist = 'Boys Noize'
+	
+
+    correctFormat = [artist, location] 
+    return correctFormat
+
 staytruetrailer = '[Trailer]'
 beats = 'Beats Unraveled'
 lose= 'Help Me Lose My Mind'
@@ -139,21 +170,13 @@ def createcsvfile(videoList):
             elif staytruetrailer in titleOfVid:
                 continue
             format = formatTitle(titleOfVid)
-            location = format[1]
-            if location == '':
-                location = 'undefined'
-            elif 'ADE' in location:
-                location = 'Amsterdam'
-            elif 'Mexico Tulum' == location:
-                location = 'Tulum'
-            elif 'MELT' in location:
-                location = 'MELT!'
-            artist = format[0]
-            if 'Brazil' in location:
-                artist = 'DJ Marky'
-                location = 'Brazil'
-            if artist == '':
-                artist = 'undefined'
+            cFormat = replaceInconsistencies(format)
+            location = cFormat[1]
+            artist = cFormat[0]
+            if titleOfVid[:-7:-1]=='ecalaP':
+                location = 'London'
+            if artist == 'undefined':
+                artist = 'Mndsgn & Knxwledge'	
             writer.writerow({'videoID': vid, 
                              'Artist' : artist,
                              'Location' : location,
@@ -177,7 +200,8 @@ def populate():
 
 
 
-
+import sortvideos as sv
+import populatejson as pj
 
 
 def add_video(name, url, videoid):
@@ -191,4 +215,8 @@ def add_video(name, url, videoid):
 if __name__ == '__main__':
     print "Starting population script..."
     populate()
+    print 'populate of csv done'
+    sv.sortVideos()
+    print 'sorting csv videos done'
+    pj.populateJson()
     print "Done"
